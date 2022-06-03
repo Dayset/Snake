@@ -15,53 +15,40 @@ namespace Snake
     {
         private const int MapWidth = 60;
         private const int MapHeight = 60;
-        private const int FrameMS = 100;
-        private static readonly Random random = new Random();
-        /*private const int std_output_handle = -11;
-          private const uint enable_virtual_terminal_processing = 4;
-
-          [DllImport("kernel32.dll", SetLastError = true)]
-          private static extern IntPtr GetStdHandle(int nStdHandle);
-
-          [DllImport("kernel32.dll")] private static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
-
-          [DllImport("kernel32.dll")] private static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
-
-          private static void Main()
-          {
-              var handle = GetStdHandle(std_output_handle);
-              uint mode;
-              GetConsoleMode(handle, out mode);
-              mode |= enable_virtual_terminal_processing;
-              SetConsoleMode(handle, mode);
-              const string underline = "\x1B[4m";
-              const string reset = "\x1B[0m";
-              Console.WriteLine("Some " + underline + "underlined" + reset + " text");
-          }
-      }//
-  } */
+        private const int FrameMS = 100; //initial speed, more is slower
+        private static readonly Random random = new();
 
         private static void Main(string[] args)
         {
+            SetWindowSize(MapWidth, MapHeight);
+            SetBufferSize(MapWidth, MapHeight);
             BackgroundColor = ConsoleColor.Black;
             ForegroundColor = ConsoleColor.White;
             CursorVisible = false;
 
-            // //Find the right font in your Console Settings
-            //so this square (4x4) looks about right
-            //
-            //    for (int i = 0; i < 4; i++)
-            //    { WriteLine("####"); }
-            //
-
-            SetWindowSize(MapWidth, MapHeight);
-            SetBufferSize(MapWidth, MapHeight);
             while (true)
             {
                 StartGame();
-                Thread.Sleep(1000);
-                ReadKey();
+                GameOver();
             }
+        }
+
+        private static void GameOver()
+        {
+            SetCursorPosition(MapWidth / 2 - 5, MapHeight / 3);
+            Console.Write("Game Over !");
+            Console.Write("\nScore: " + snake.Score);
+            for (int i = 1; i < 4; i++)
+            {
+                Beep(425 * i - (100 * i * i), 100);
+            }
+            Beep(200, 1250);
+            //Thread.Sleep(500);
+            while (Console.KeyAvailable)
+            {
+                Console.ReadKey();
+            }
+            ReadKey();
         }
 
         private static void StartGame()
@@ -94,8 +81,6 @@ namespace Snake
                     break;
             }
             snake.Clear();
-            SetCursorPosition(MapWidth / 2 - 5, MapHeight / 3);
-            Console.WriteLine("Game Over !");
         }
 
         private static Direction ReadMovement(Direction currentDirection)
