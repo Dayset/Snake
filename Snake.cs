@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Snake
 {
@@ -31,11 +28,12 @@ namespace Snake
             Draw();
         }
 
-        public void Move(Direction directions)
+        public void Move(Direction directions, bool eaten = false)
         {
             Clear();
             Body.Enqueue(new Pixel(Head.X, Head.Y, this.bodyColor));
-            Body.Dequeue();
+            if (!eaten)
+                Body.Dequeue();
             Head = directions switch
             {
                 Direction.Up => new Pixel(Head.X, Head.Y - 1, this.headColor),
@@ -52,7 +50,7 @@ namespace Snake
 
         public void Draw()
         {
-            Head.Draw();
+            Head.DrawHead();
             foreach (Pixel pixel in Body)
             {
                 pixel.Draw();

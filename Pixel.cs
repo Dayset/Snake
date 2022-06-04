@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Snake
 {
@@ -18,6 +14,20 @@ namespace Snake
             X = x;
             Y = y;
             Color = color;
+        }
+
+        public void DrawFood()
+        {
+            Console.ForegroundColor = Color;
+            Console.SetCursorPosition(X, Y);
+            Console.Write("$");
+        }
+
+        public void DrawHead()
+        {
+            Console.ForegroundColor = Color;
+            Console.SetCursorPosition(X, Y);
+            Console.Write("@");
         }
 
         public void Draw()
