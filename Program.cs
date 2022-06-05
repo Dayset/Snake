@@ -23,6 +23,8 @@ namespace Snake
         private const int MapWidth = 60;
         private const int MapHeight = 40;
 
+        private static Stopwatch timePlayed = new Stopwatch();
+
         private static readonly Random Random = new Random();
 
         private const ConsoleColor FoodColor = ConsoleColor.Yellow;
@@ -149,13 +151,17 @@ namespace Snake
                 ConsoleKey.RightArrow when currentDirection != Direction.Left => Direction.Right,
                 _ => currentDirection
             };
+            if (key == ConsoleKey.Spacebar)
+            {
+                PauseGame();
+            }
             return currentDirection;
         }
 
         private static void StartGame()
         {
             Task.Run(() => SnakeBornBeeps());
-            var timePlayed = new Stopwatch();
+            
 
             Direction currentMovement = Direction.Right;
             int MapX = (Random.Next(5, MapWidth - 20));
@@ -179,6 +185,7 @@ namespace Snake
                 timePlayed.Start();
                 Direction oldMovement = currentMovement;
 
+               
                 while (sw.ElapsedMilliseconds <= GameSpeedDelay - lagMs)
 
                 {
@@ -237,6 +244,16 @@ namespace Snake
         private static void FlushKeyboard()
         {
             while (Console.KeyAvailable) { Console.ReadKey(true); }
+        }
+
+        private static void PauseGame()
+        {
+            timePlayed.Stop();
+            //Console.WriteLine("Game Paused");
+            if (ReadKey(true).Key == ConsoleKey.Spacebar)
+            {
+                timePlayed.Start();
+            }
         }
     }
 }
