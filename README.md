@@ -1,10 +1,10 @@
 # Snake Classic Game (C#, console)
 
-**==! Important !==**
-
+**Important !**  
 To properly launch Snake Classic Game as windows console application, you should set **Raster fonts** in console properties.  
 Otherwise app will throw an exception and will not work. Look for square font, if you don't have such, pick 8x9.
 
+https://github.com/Dayset/Snake/raw/main/Snake.rar
 
 Unfortunately windows console is very limited, and there is no 'civilized' way to set font from application.  
 Otherwise without square like fonts text-ASCII graphics will look very ugly.  
