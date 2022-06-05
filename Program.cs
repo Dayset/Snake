@@ -28,10 +28,11 @@ namespace Snake
         private const ConsoleColor FoodColor = ConsoleColor.Yellow;
         private const ConsoleColor HeadColor = ConsoleColor.Red;
         private const ConsoleColor BodyColor = ConsoleColor.DarkGreen;
-        public const int GameSpeedDelay = 100;
-        // 100 = Easy 'Default'
-        // 50  = Normal
-        // 10   = Hard
+        public const int GameSpeedDelay = 50;
+
+        // 200    = Easy 'Default'
+        // 100    = Normal
+        // 50    = Hard
 
         private static void Main(string[] args)
         {
@@ -58,7 +59,9 @@ namespace Snake
         }
 
         private static void DrawBorder()
-        {//This method uses 17sec to draw 1000 cycles from which 2s is Console.Clear() x4.4 times faster than second method.
+        {
+            // This method uses 17sec to draw 1000 cycles from which 2s is Console.Clear()
+            // In total it's x4.4 times faster than second method.
             Console.Clear();
             ForegroundColor = ConsoleColor.White;
             var whiteSpace = new StringBuilder();
@@ -79,17 +82,17 @@ namespace Snake
             sb.AppendLine($"{whiteSpace}");
             Console.Write(sb);
 
-            //Old simple and relatively slow method  to write each block [1000 cycles = 67sec]
-            /*for (int i = 0; i < MapHeight; i++)
-            {
-                new Pixel(0, i, ConsoleColor.White).Draw();
-                new Pixel(MapWidth - 1, i, ConsoleColor.White).Draw();
-            }
-            for (int i = 0; i < MapWidth; i++)
-            {
-                new Pixel(i, 1, ConsoleColor.White).Draw();
-                new Pixel(i, MapHeight - 1, ConsoleColor.White).Draw();
-            }*/
+            //  Old simple and relatively slow method  to write each block [1000 cycles = 67sec]
+            //  for (int i = 0; i < MapHeight; i++)
+            //      {
+            //      new Pixel(0, i, ConsoleColor.White).Draw();
+            //      new Pixel(MapWidth - 1, i, ConsoleColor.White).Draw();
+            //      }
+            //  for (int i = 0; i < MapWidth; i++)
+            //      {
+            //      new Pixel(i, 1, ConsoleColor.White).Draw();
+            //      new Pixel(i, MapHeight - 1, ConsoleColor.White).Draw();
+            //      }
         }
 
         private static void Welcome()
@@ -107,7 +110,7 @@ namespace Snake
 
                 SetCursorPosition(MapWidth / 2 - 1, MapHeight / 3);
                 Console.WriteLine(" ");
-                Thread.Sleep(500);
+                Thread.Sleep(400);
             }
         }
 
@@ -167,7 +170,7 @@ namespace Snake
             var sw = new Stopwatch();
             int Score = 0;
             int lagMs = 0;
-            int speed = 100; // Don go below 20
+            sw.Start();
 
             //Main Game Logic.
             while (true)
@@ -176,7 +179,8 @@ namespace Snake
                 timePlayed.Start();
                 Direction oldMovement = currentMovement;
 
-                while (sw.ElapsedMilliseconds <= (GameSpeedDelay + speed) - lagMs)
+                while (sw.ElapsedMilliseconds <= GameSpeedDelay - lagMs)
+
                 {
                     if (oldMovement == currentMovement)
                     {
@@ -189,14 +193,6 @@ namespace Snake
                     snake.Move(currentMovement, true);
                     food = GenFood(snake);
                     food.DrawFood();
-                    if (speed > 20)
-                    {
-                        speed = speed - 20;
-                    }
-                    else
-                    {
-                        speed = 20;
-                    }
                     Score++;
                 }
                 sw.Restart();
@@ -211,7 +207,7 @@ namespace Snake
                 lagMs = (int)(sw.ElapsedMilliseconds);
             }
 
-            //GameOver Procedure.
+            // GameOver Procedure.
             snake.Clear();
             DefaultConsoleColors();
             SetCursorPosition(MapWidth / 2 - 5, MapHeight / 3);
@@ -228,7 +224,7 @@ namespace Snake
 
         private static void GameOverTune()
         {
-            // "Woot eto da(lox)" tune(c)
+            // "Woot eto daa(lox)" tune.
             for (int i = 1; i < 4; i++)
             {
                 Beep(425 * i - (100 * i * i), 100);
