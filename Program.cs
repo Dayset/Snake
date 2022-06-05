@@ -101,18 +101,27 @@ namespace Snake
         {
             DrawBorder();
             DefaultConsoleColors();
-
-            //3 2 1 + Beeps
-            for (int l = 3; l > 0; l--)
+            WriteText("THE SNAKE");
+            WriteText("Use Arrows to direct the Sname",1);
+            WriteText("Press Space to start and pause the game",2);
+            
+            if (ReadKey(true).Key == ConsoleKey.Spacebar)
             {
-                SetCursorPosition(MapWidth / 2 - 1, MapHeight / 3);
-                Task.Run(() => Beep(1500, 100));
-                Console.WriteLine(l);
-                Thread.Sleep(500);
+                //When game start clean the above text
+                ClearText();
+                ClearText(1);
+                ClearText(2);
+                //3 2 1 + Beeps
+                for (int l = 3; l > 0; l--)
+                {
+                    Task.Run(() => Beep(1500, 100));
+                    WriteText(l.ToString());
+                    Thread.Sleep(500);
 
-                SetCursorPosition(MapWidth / 2 - 1, MapHeight / 3);
-                Console.WriteLine(" ");
-                Thread.Sleep(400);
+                    ClearText();
+                    Thread.Sleep(400);
+
+                }
             }
         }
 
@@ -254,6 +263,48 @@ namespace Snake
             {
                 timePlayed.Start();
             }
+        }
+
+        /// <summary>
+        /// Writes a text in the middle of the console
+        /// </summary>
+        /// <param name="text"></param>
+        private static void WriteText(string text)
+        {
+            var length = text.Length;
+            
+            SetCursorPosition(MapWidth / 2 - length/2, MapHeight / 3);
+            Console.WriteLine(text);
+        }
+        /// <summary>
+        /// Writes a text in the middle of the console
+        /// </summary>
+        /// <param name="text"></param>
+        private static void WriteText(string text, int yOffset)
+        {
+            var length = text.Length;
+
+            SetCursorPosition(MapWidth / 2 - length / 2, MapHeight / 3 + yOffset);
+            Console.WriteLine(text);
+        }
+        /// <summary>
+        /// Replaces the text written with line of whitespace
+        /// </summary>
+        /// <param name="length"></param>
+        private static void ClearText()
+        {
+            SetCursorPosition(1, MapHeight / 3);
+            Console.WriteLine(new string(' ', MapWidth-3));
+        }
+        /// <summary>
+        /// Replaces the text written with line of whitespace
+        /// For lines underneath
+        /// </summary>
+        /// <param name="length"></param>
+        private static void ClearText(int yOffset)
+        {
+            SetCursorPosition(1, MapHeight / 3 + yOffset);
+            Console.WriteLine(new string(' ', MapWidth - 3));
         }
     }
 }
