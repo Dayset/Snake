@@ -54,7 +54,7 @@ namespace Snake
             var welcomeTexts = new List<string>();
             welcomeTexts.Add("THE SNAKE!");
             welcomeTexts.Add("Use Arrows to direct the Snake");
-            welcomeTexts.Add(" Press SPACE to start and pause the Game");
+            welcomeTexts.Add("Press SPACE to start and pause the Game");
 
             _screenOperations.WriteText(welcomeTexts);
             //Gives the player time to read the message
@@ -186,11 +186,8 @@ namespace Snake
             // GameOver Procedure.
             snake.Clear();
             food.Erase();
-
-            //Wasnt sure if you want to keep that one broken space where the snake hit before resetting screen,
-            //if so then can uncomment default colors in delete Reset screen here and uncomment the one at the end of this method
-            //_screenOperations.DefaultConsoleColors();
-            _screenOperations.ResetScreen();
+            //Color changes somewhere before here so needs resetting. 
+            _screenOperations.DefaultConsoleColors();
 
             var gameOverTexts = new List<string>();
             gameOverTexts.Add("Game Over!");
@@ -198,9 +195,11 @@ namespace Snake
             gameOverTexts.Add("Time : " + timeSpan.Minutes + "m " + timeSpan.Seconds + "s");
             gameOverTexts.Add("Score : " + Score + "$");
             _screenOperations.WriteText(gameOverTexts);
-
+            
+            
             GameOverTune();
-            //_screenOperations.ResetScreen();
+            //a single pixel missing in the border after game over text so screen needs reset here. 
+            _screenOperations.ResetScreen();
         }
 
         private static void GameOverTune()
