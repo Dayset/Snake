@@ -104,6 +104,7 @@ namespace Snake
 
         private static void Welcome()
         {
+            
             WriteText("THE SNAKE!");
             WriteText("Use Arrows to direct the Snake", 2);
             WriteText(" Press SPACE to start and pause the Game", 4);
@@ -124,6 +125,7 @@ namespace Snake
             ClearText();
             ClearText(2);
             ClearText(4);
+            
             //3 2 1 + Beeps
             for (int l = 3; l > 0; l--)
             {
@@ -204,6 +206,7 @@ namespace Snake
             {
                 sw.Restart();
                 timePlayed.Start();
+                CursorVisible = false; 
                 Direction oldMovement = currentMovement;
 
                 while (sw.ElapsedMilliseconds <= GameSpeedDelay - lagMs)
