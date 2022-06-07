@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ScreenOperations.cs" />
     <Compile Include="Directions.cs" />
     <Compile Include="Pixel.cs" />
     <Compile Include="Program.cs" />
