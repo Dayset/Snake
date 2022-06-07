@@ -30,17 +30,20 @@ namespace Snake
         private const ConsoleColor FoodColor = ConsoleColor.Yellow;
         private const ConsoleColor HeadColor = ConsoleColor.Red;
         private const ConsoleColor BodyColor = ConsoleColor.DarkGreen;
-        public const int GameSpeedDelay = 50;
+        public const int GameSpeedDelay = 100;
 
         // 200    = Easy 'Default'
         // 100    = Normal
-        // 50    = Hard
+        // 50     = Hard
 
         private static void Main(string[] args)
         {
             ConsoleSettings();
             while (true)
             {
+                DrawBorder();
+                DefaultConsoleColors();
+
                 Welcome();
             }
         }
@@ -63,6 +66,7 @@ namespace Snake
             // This method uses 17sec to draw 1000 cycles from which 2s is Console.Clear()
             // In total it's x4.4 times faster than second method.
             Console.Clear();
+
             ForegroundColor = ConsoleColor.White;
             var whiteSpace = new StringBuilder();
             var blackSpace = new StringBuilder();
@@ -82,6 +86,9 @@ namespace Snake
             sb.AppendLine($"{whiteSpace}");
             Console.Write(sb);
 
+            //Cooling the 'cw gun'. Draws border a bit smoother.
+            Thread.Sleep(50);
+
             //  Old simple and relatively slow method  to write each block [1000 cycles = 67sec]
             //  for (int i = 0; i < MapHeight; i++)
             //      {
@@ -97,32 +104,38 @@ namespace Snake
 
         private static void Welcome()
         {
-            DrawBorder();
-            DefaultConsoleColors();
-            WriteText("THE SNAKE");
-            WriteText("Use Arrows to direct the Sname",1);
-            WriteText("Press Space to start and pause the game",2);
-            
-            if (ReadKey(true).Key == ConsoleKey.Spacebar)
+            WriteText("THE SNAKE!");
+            WriteText("Use Arrows to direct the Snake", 2);
+            WriteText(" Press SPACE to start and pause the Game", 4);
+            //Gives the player time to read the message
+            Thread.Sleep(500);
+
+            //Just to be sure..
+            FlushKeyboard();
+            //Eliminate screen blinking when user input is not Space
+            SetCursorPosition(0, MapHeight - 1);
+            while (ReadKey(true).Key != ConsoleKey.Spacebar)
             {
-                //When game start clean the above text
-                ClearText();
-                ClearText(1);
-                ClearText(2);
-                //3 2 1 + Beeps
-                for (int l = 3; l > 0; l--)
-                {
-                    Task.Run(() => Beep(1500, 100));
-                    WriteText(l.ToString());
-                    Thread.Sleep(500);
-
-                    ClearText();
-                    Thread.Sleep(400);
-
-                }
-
-                StartGame();
+                SetCursorPosition(0, MapHeight - 1);
             }
+            //Start the game when user input is Space
+
+            //When the game starts clean the above text
+            ClearText();
+            ClearText(2);
+            ClearText(4);
+            //3 2 1 + Beeps
+            for (int l = 3; l > 0; l--)
+            {
+                Task.Run(() => Beep(1500, 100));
+                WriteText(l.ToString());
+                Thread.Sleep(500);
+
+                ClearText();
+                Thread.Sleep(400);
+            }
+
+            StartGame();
         }
 
         private static void SnakeBornBeeps()
@@ -170,7 +183,6 @@ namespace Snake
         private static void StartGame()
         {
             Task.Run(() => SnakeBornBeeps());
-            
 
             Direction currentMovement = Direction.Right;
             int MapX = (Random.Next(5, MapWidth - 20));
@@ -194,7 +206,6 @@ namespace Snake
                 timePlayed.Start();
                 Direction oldMovement = currentMovement;
 
-               
                 while (sw.ElapsedMilliseconds <= GameSpeedDelay - lagMs)
 
                 {
@@ -225,6 +236,7 @@ namespace Snake
 
             // GameOver Procedure.
             snake.Clear();
+            food.Erase();
             DefaultConsoleColors();
             SetCursorPosition(MapWidth / 2 - 5, MapHeight / 3);
             Console.Write("Game Over!");
@@ -241,13 +253,13 @@ namespace Snake
 
         private static void GameOverTune()
         {
-            // "Woot eto daa(lox)" tune.
+            // 'Wow you failed' tune.
             for (int i = 1; i < 4; i++)
             {
                 Beep(425 * i - (100 * i * i), 100);
             }
             Beep(200, 1000);
-            Thread.Sleep(3000);
+            Thread.Sleep(3000); //Additional chill timer
             ReadKey();
         }
 
@@ -278,10 +290,11 @@ namespace Snake
         private static void WriteText(string text)
         {
             var length = text.Length;
-            
-            SetCursorPosition(MapWidth / 2 - length/2, MapHeight / 3);
+
+            SetCursorPosition(MapWidth / 2 - length / 2, MapHeight / 3);
             Console.WriteLine(text);
         }
+
         /// <summary>
         /// Writes a text in the middle of the console
         /// </summary>
@@ -293,6 +306,7 @@ namespace Snake
             SetCursorPosition(MapWidth / 2 - length / 2, MapHeight / 3 + yOffset);
             Console.WriteLine(text);
         }
+
         /// <summary>
         /// Replaces the text written with line of whitespace
         /// </summary>
@@ -300,8 +314,9 @@ namespace Snake
         private static void ClearText()
         {
             SetCursorPosition(1, MapHeight / 3);
-            Console.WriteLine(new string(' ', MapWidth-3));
+            Console.WriteLine(new string(' ', MapWidth - 3));
         }
+
         /// <summary>
         /// Replaces the text written with line of whitespace
         /// For lines underneath
