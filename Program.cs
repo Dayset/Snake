@@ -153,6 +153,7 @@ namespace Snake
             {
                 sw.Restart();
                 timePlayed.Start();
+                CursorVisible = false; 
                 Direction oldMovement = currentMovement;
 
                 while (sw.ElapsedMilliseconds <= GameSpeedDelay - lagMs)
