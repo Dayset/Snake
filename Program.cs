@@ -42,8 +42,6 @@ namespace Snake
             while (true)
             {
                 Welcome();
-                StartGame();
-                GameOverTune();
             }
         }
 
@@ -122,6 +120,8 @@ namespace Snake
                     Thread.Sleep(400);
 
                 }
+
+                StartGame();
             }
         }
 
@@ -236,6 +236,7 @@ namespace Snake
             if (Score < 10)
                 Write("Score : " + Score + "$");
             else { Write("Score: " + Score + "$"); }
+            GameOverTune();
         }
 
         private static void GameOverTune()
