@@ -264,6 +264,11 @@ namespace Snake
             {
                 timePlayed.Start();
             }
+            else
+            {
+                //if pressed any other button keep pausing game.
+                PauseGame();
+            }
         }
 
         /// <summary>
