@@ -9,20 +9,23 @@ Otherwise without square like fonts text-ASCII graphics will look very ugly.
 */
 
 using System;
+using System.Collections.Generic;
 using static System.Console;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace Snake
 {
     internal class Program
     {
-        private const int MapWidth = 60;
-        private const int MapHeight = 40;
+        //With 8x9 raster font and 640x480 the biggest Map size is 40x32.
+        //I might be wrong: my Windows DPI scale is 150%
+        private const int MapWidth = 40;
+
+        private const int MapHeight = 32;
 
         private static ScreenOperations _screenOperations;
 
@@ -41,7 +44,7 @@ namespace Snake
 
         private static void Main(string[] args)
         {
-            _screenOperations = new ScreenOperations(mapWidth: 60, mapHeight: 40);
+            _screenOperations = new ScreenOperations(MapWidth, MapHeight);
             while (true)
             {
                 Welcome();
@@ -50,11 +53,11 @@ namespace Snake
 
         private static void Welcome()
         {
-
             var welcomeTexts = new List<string>();
-            welcomeTexts.Add("THE SNAKE!");
-            welcomeTexts.Add("Use Arrows to direct the Snake");
-            welcomeTexts.Add("Press SPACE to start and pause the Game");
+            welcomeTexts.Add("The SNAKE!");
+            welcomeTexts.Add("Arrows to direct the Snake");
+            welcomeTexts.Add("SPACE to start and pause the Game");
+            welcomeTexts.Add("ESCAPE to quit");
 
             _screenOperations.WriteText(welcomeTexts);
             //Gives the player time to read the message
@@ -72,7 +75,7 @@ namespace Snake
 
             //When the game starts clean the above text
             _screenOperations.ClearText(welcomeTexts.Count());
-            
+
             //3 2 1 + Beeps
             for (int l = 3; l > 0; l--)
             {
@@ -126,6 +129,11 @@ namespace Snake
             {
                 PauseGame();
             }
+            if (key == ConsoleKey.Escape)
+            {
+                Clear();
+                Environment.Exit(0);
+            }
             return currentDirection;
         }
 
@@ -148,12 +156,12 @@ namespace Snake
             int lagMs = 0;
             sw.Start();
 
-            //Main Game Logic.
+            //Main Game Logic
             while (true)
             {
                 sw.Restart();
                 timePlayed.Start();
-                CursorVisible = false; 
+                CursorVisible = false;
                 Direction oldMovement = currentMovement;
 
                 while (sw.ElapsedMilliseconds <= GameSpeedDelay - lagMs)
@@ -186,7 +194,7 @@ namespace Snake
             // GameOver Procedure.
             snake.Clear();
             food.Erase();
-            //Color changes somewhere before here so needs resetting. 
+            //Color changes somewhere before here so needs resetting.
             _screenOperations.DefaultConsoleColors();
 
             var gameOverTexts = new List<string>();
@@ -195,10 +203,9 @@ namespace Snake
             gameOverTexts.Add("Time : " + timeSpan.Minutes + "m " + timeSpan.Seconds + "s");
             gameOverTexts.Add("Score : " + Score + "$");
             _screenOperations.WriteText(gameOverTexts);
-            
-            
+
             GameOverTune();
-            //a single pixel missing in the border after game over text so screen needs reset here. 
+            //a single pixel missing in the border after game over text so screen needs reset here.
             _screenOperations.ResetScreen();
         }
 
@@ -222,18 +229,22 @@ namespace Snake
         private static void PauseGame()
         {
             timePlayed.Stop();
-            //Console.WriteLine("Game Paused");
-            if (ReadKey(true).Key == ConsoleKey.Spacebar)
+            ConsoleKeyInfo key = Console.ReadKey(true);
+            switch (key.Key)
             {
-                timePlayed.Start();
-            }
-            else
-            {
-                //if pressed any other button keep pausing game.
-                PauseGame();
-            }
-        }
+                case ConsoleKey.Spacebar:
+                    timePlayed.Start();
+                    break;
 
-        
+                case ConsoleKey.Escape:
+                    Clear();
+                    Environment.Exit(0);
+                    break;
+
+                default:
+                    PauseGame();
+                    break;
+            };
+        }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using static System.Console;
 using System.Text;
 using System.Threading;
-using static System.Console;
 
 namespace Snake
 {
@@ -10,7 +10,9 @@ namespace Snake
     {
         //popular naming convention for private fields
         private int _mapWidth;
+
         private int _mapHeight;
+
         public ScreenOperations(int mapWidth, int mapHeight)
         {
             _mapWidth = mapWidth;
@@ -24,6 +26,7 @@ namespace Snake
         {
             DrawBorder();
         }
+
         private void ConsoleSettings()
         {
             SetWindowSize(_mapWidth, _mapHeight);
@@ -77,6 +80,7 @@ namespace Snake
             BackgroundColor = ConsoleColor.Black;
             ForegroundColor = ConsoleColor.White;
         }
+
         /// <summary>
         /// Write text in single line
         /// </summary>
@@ -88,6 +92,7 @@ namespace Snake
             SetCursorPosition(_mapWidth / 2 - length / 2, _mapHeight / 3);
             Console.WriteLine(text);
         }
+
         /// <summary>
         /// Write text in multiple lines
         /// </summary>
@@ -99,7 +104,7 @@ namespace Snake
             {
                 var length = text.Length;
 
-                SetCursorPosition(_mapWidth / 2 - length / 2, _mapHeight / 3 + yOffset);
+                SetCursorPosition(_mapWidth / 2 - (length / 2) - 1, _mapHeight / 3 + yOffset);
                 Console.WriteLine(text);
                 yOffset += 2;
             }
@@ -119,7 +124,5 @@ namespace Snake
                 yOffset += 2;
             }
         }
-
-
     }
 }
