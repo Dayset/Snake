@@ -44,7 +44,11 @@ namespace Snake
 
         private static void Main(string[] args)
         {
+            ScreenOperations.DisableResize();
+
             _screenOperations = new ScreenOperations(MapWidth, MapHeight);
+            Console.Title = "The Snake! (Classic Console Game)";
+
             while (true)
             {
                 Welcome();
@@ -231,12 +235,12 @@ namespace Snake
             switch (key.Key)
             {
                 case ConsoleKey.Spacebar:
-                    //SShould skips Welcome text if user
+                    //Should skips Welcome text if user
                     //presses Space after Game Over
                     break;
 
                 default:
-                    Welcome();
+                    Main(args: null);
                     break;
             };
         }
