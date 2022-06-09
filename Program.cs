@@ -70,31 +70,34 @@ namespace Snake
 
             //Just to be sure..
             FlushKeyboard();
+            
+
+            var gameDifficulty = SelectLevel();
+
+            _screenOperations.ClearText(welcomeTexts.Count());
+            CountDown();
+            StartGame(gameDifficulty);
+        }
+
+        private static int SelectLevel()
+        {
+            int gameDifficulty = 100;
             ConsoleKeyInfo key = Console.ReadKey(true);
             switch (key.Key)
             {
                 case ConsoleKey.D1:
-                    _screenOperations.ClearText(welcomeTexts.Count());
-                    CountDown();
-                    StartGame(200);
+                    gameDifficulty = 200;
                     break;
 
                 case ConsoleKey.D2:
-                    _screenOperations.ClearText(welcomeTexts.Count());
-                    CountDown();
-                    StartGame(100);
+                    gameDifficulty = 100;
                     break;
 
                 case ConsoleKey.D3:
-                    _screenOperations.ClearText(welcomeTexts.Count());
-                    CountDown();
-                    StartGame(50);
+                    gameDifficulty = 50;
                     break;
 
                 case ConsoleKey.Spacebar:
-                    _screenOperations.ClearText(welcomeTexts.Count());
-                    CountDown();
-                    StartGame(100);
                     break;
 
                 case ConsoleKey.Escape:
@@ -105,7 +108,9 @@ namespace Snake
                 default:
                     Welcome();
                     break;
+
             };
+            return gameDifficulty;
         }
 
         public static void CountDown()
