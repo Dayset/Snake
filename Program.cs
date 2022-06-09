@@ -36,7 +36,7 @@ namespace Snake
         private const ConsoleColor FoodColor = ConsoleColor.Yellow;
         private const ConsoleColor HeadColor = ConsoleColor.Red;
         private const ConsoleColor BodyColor = ConsoleColor.DarkGreen;
-        public const int GameSpeedDelay = 100;
+        //public const int GameSpeedDelay = 100;
 
         // 200    = Easy 'Default'
         // 100    = Normal
@@ -61,6 +61,7 @@ namespace Snake
             welcomeTexts.Add("The SNAKE!");
             welcomeTexts.Add("Arrows to direct the Snake");
             welcomeTexts.Add("SPACE to start and pause the Game");
+            welcomeTexts.Add("1 = Easy  2 = Normal  3 = Hard");
             welcomeTexts.Add("ESCAPE to quit");
 
             _screenOperations.WriteText(welcomeTexts);
@@ -72,7 +73,28 @@ namespace Snake
             ConsoleKeyInfo key = Console.ReadKey(true);
             switch (key.Key)
             {
+                case ConsoleKey.D1:
+                    _screenOperations.ClearText(welcomeTexts.Count());
+                    CountDown();
+                    StartGame(200);
+                    break;
+
+                case ConsoleKey.D2:
+                    _screenOperations.ClearText(welcomeTexts.Count());
+                    CountDown();
+                    StartGame(100);
+                    break;
+
+                case ConsoleKey.D3:
+                    _screenOperations.ClearText(welcomeTexts.Count());
+                    CountDown();
+                    StartGame(50);
+                    break;
+
                 case ConsoleKey.Spacebar:
+                    _screenOperations.ClearText(welcomeTexts.Count());
+                    CountDown();
+                    StartGame(100);
                     break;
 
                 case ConsoleKey.Escape:
@@ -84,9 +106,10 @@ namespace Snake
                     Welcome();
                     break;
             };
-            //When the game starts clean the above text
-            _screenOperations.ClearText(welcomeTexts.Count());
+        }
 
+        public static void CountDown()
+        {
             //3 2 1 + Beeps
             for (int l = 3; l > 0; l--)
             {
@@ -97,8 +120,6 @@ namespace Snake
                 _screenOperations.ClearText(1);
                 Thread.Sleep(400);
             }
-
-            StartGame();
         }
 
         private static void SnakeBornBeeps()
@@ -148,7 +169,7 @@ namespace Snake
             return currentDirection;
         }
 
-        private static void StartGame()
+        private static void StartGame(int gameSpeedDelay)
         {
             Task.Run(() => SnakeBornBeeps());
 
@@ -175,7 +196,7 @@ namespace Snake
                 CursorVisible = false;
                 Direction oldMovement = currentMovement;
 
-                while (sw.ElapsedMilliseconds <= GameSpeedDelay - lagMs)
+                while (sw.ElapsedMilliseconds <= gameSpeedDelay - lagMs)
                 {
                     if (oldMovement == currentMovement)
                     {
