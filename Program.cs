@@ -61,18 +61,25 @@ namespace Snake
 
             _screenOperations.WriteText(welcomeTexts);
             //Gives the player time to read the message
-            Thread.Sleep(500);
+            Thread.Sleep(100);
 
             //Just to be sure..
             FlushKeyboard();
-            //Eliminate screen blinking when user input is not Space
-            SetCursorPosition(0, MapHeight - 1);
-            while (ReadKey(true).Key != ConsoleKey.Spacebar)
+            ConsoleKeyInfo key = Console.ReadKey(true);
+            switch (key.Key)
             {
-                SetCursorPosition(0, MapHeight - 1);
-            }
-            //Start the game when user input is Space
+                case ConsoleKey.Spacebar:
+                    break;
 
+                case ConsoleKey.Escape:
+                    Clear();
+                    Environment.Exit(0);
+                    break;
+
+                default:
+                    Welcome();
+                    break;
+            };
             //When the game starts clean the above text
             _screenOperations.ClearText(welcomeTexts.Count());
 
@@ -217,8 +224,21 @@ namespace Snake
                 Beep(425 * i - (100 * i * i), 100);
             }
             Beep(200, 1000);
-            Thread.Sleep(3000); //Additional chill timer
-            ReadKey();
+            Thread.Sleep(1000); //Additional chill timer
+            FlushKeyboard();
+
+            ConsoleKeyInfo key = Console.ReadKey(true);
+            switch (key.Key)
+            {
+                case ConsoleKey.Spacebar:
+                    //SShould skips Welcome text if user
+                    //presses Space after Game Over
+                    break;
+
+                default:
+                    Welcome();
+                    break;
+            };
         }
 
         private static void FlushKeyboard()
