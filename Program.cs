@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace Snake
 {
-    internal class Program
+    public class Program
     {
         //With 8x9 raster font and 640x480 the biggest Map size is 40x32.
         //I might be wrong: my Windows DPI scale is 150%
@@ -28,6 +28,7 @@ namespace Snake
         private const int MapHeight = 32;
 
         private static ScreenOperations _screenOperations;
+        private static AudioOperations _audioOperations;
 
         private static Stopwatch timePlayed = new Stopwatch();
 
@@ -42,7 +43,7 @@ namespace Snake
         // 100    = Normal
         // 50     = Hard
 
-        private static void Main(string[] args)
+        public static void Main(string[] args)
         {
             ScreenOperations.DisableResize();
 
@@ -70,12 +71,11 @@ namespace Snake
 
             //Just to be sure..
             FlushKeyboard();
-            
 
             var gameDifficulty = SelectLevel();
 
             _screenOperations.ClearText(welcomeTexts.Count());
-            CountDown();
+            AudioOperations.CountDown();
             StartGame(gameDifficulty);
         }
 
@@ -108,32 +108,8 @@ namespace Snake
                 default:
                     Welcome();
                     break;
-
             };
             return gameDifficulty;
-        }
-
-        public static void CountDown()
-        {
-            //3 2 1 + Beeps
-            for (int l = 3; l > 0; l--)
-            {
-                Task.Run(() => Beep(1500, 100));
-                _screenOperations.WriteText(l.ToString());
-                Thread.Sleep(500);
-
-                _screenOperations.ClearText(1);
-                Thread.Sleep(400);
-            }
-        }
-
-        private static void SnakeBornBeeps()
-        {
-            for (int i = 1; i < 6; i++)
-            {
-                Beep(370 * i, 100);
-                Beep(500, 70);
-            }
         }
 
         private static Pixel GenFood(Snake snake)
@@ -176,7 +152,9 @@ namespace Snake
 
         private static void StartGame(int gameSpeedDelay)
         {
-            Task.Run(() => SnakeBornBeeps());
+            _audioOperations = new AudioOperations();
+
+            Task.Run(() => AudioOperations.SnakeBornBeeps());
 
             Direction currentMovement = Direction.Right;
             int MapX = (Random.Next(5, MapWidth - 20));
@@ -241,37 +219,12 @@ namespace Snake
             gameOverTexts.Add("Score : " + Score + "$");
             _screenOperations.WriteText(gameOverTexts);
 
-            GameOverTune();
+            AudioOperations.GameOverTune();
             //a single pixel missing in the border after game over text so screen needs reset here.
             _screenOperations.ResetScreen();
         }
 
-        private static void GameOverTune()
-        {
-            // 'Wow you failed' tune.
-            for (int i = 1; i < 4; i++)
-            {
-                Beep(425 * i - (100 * i * i), 100);
-            }
-            Beep(200, 1000);
-            Thread.Sleep(1000); //Additional chill timer
-            FlushKeyboard();
-
-            ConsoleKeyInfo key = Console.ReadKey(true);
-            switch (key.Key)
-            {
-                case ConsoleKey.Spacebar:
-                    //Should skips Welcome text if user
-                    //presses Space after Game Over
-                    break;
-
-                default:
-                    Main(args: null);
-                    break;
-            };
-        }
-
-        private static void FlushKeyboard()
+        public static void FlushKeyboard()
         {
             while (Console.KeyAvailable) { Console.ReadKey(true); }
         }
